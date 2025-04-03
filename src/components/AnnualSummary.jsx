@@ -55,7 +55,7 @@ export default function AnnualSummary({
               marginRight: "15px",
             }}
           >
-            {totalEnergy}
+            {totalEnergy.toLocaleString()}
           </div>
           <div>
             <div style={{ fontWeight: "500" }}>Total Annual Energy</div>
@@ -81,7 +81,7 @@ export default function AnnualSummary({
               marginRight: "15px",
             }}
           >
-            {peakDemand}
+            {peakDemand.toLocaleString()}
           </div>
           <div>
             <div style={{ fontWeight: "500" }}>Peak Demand</div>
@@ -106,7 +106,7 @@ export default function AnnualSummary({
               marginRight: "15px",
             }}
           >
-            {Math.round(totalEnergy / 12)}
+            {Math.round(totalEnergy / 12).toLocaleString()}
           </div>
           <div>
             <div style={{ fontWeight: "500" }}>Average Monthly Energy</div>
@@ -145,7 +145,7 @@ export default function AnnualSummary({
             Heating Mode
           </div>
           <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            {operatingHours.heating} hours (
+            {operatingHours.heating.toLocaleString()} hours (
             {Math.round(operatingHours.heating / 87.6)}%)
           </div>
         </div>
@@ -162,7 +162,7 @@ export default function AnnualSummary({
             Cooling Mode
           </div>
           <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            {operatingHours.cooling} hours (
+            {operatingHours.cooling.toLocaleString()} hours (
             {Math.round(operatingHours.cooling / 87.6)}%)
           </div>
         </div>
@@ -176,7 +176,7 @@ export default function AnnualSummary({
         >
           <div style={{ fontWeight: "500", marginBottom: "5px" }}>Off Mode</div>
           <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            {operatingHours.off} hours ({Math.round(operatingHours.off / 87.6)}
+            {operatingHours.off.toLocaleString()} hours ({Math.round(operatingHours.off / 87.6)}
             %)
           </div>
         </div>

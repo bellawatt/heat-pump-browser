@@ -3,6 +3,15 @@ import Methodology from "./components/Methodology";
 import AnnualSummary from "./components/AnnualSummary";
 import MonthlyData from "./components/MonthlyData";
 import logo from "./assets/logo.svg";
+import { generateHourlyData } from "./functions";
+import './App.css'
+
+const insulationOptions = [
+  { label: "Very Bad", value: 1.3 },
+  { label: "Bad", value: 1.1 },
+  { label: "Good", value: 0.8 },
+  { label: "Excellent", value: 0.6 },
+];
 
 export default function App() {
   // Parameters
@@ -15,6 +24,7 @@ export default function App() {
   const [winterSetpoint, setWinterSetpoint] = useState(70);
   const [summerSetpoint, setSummerSetpoint] = useState(75);
   const [squareFootage, setSquareFootage] = useState(2000);
+  const [insulationQuality, setInsulationQuality] = useState(2);
 
   // Results
   const [monthlyData, setMonthlyData] = useState([]);
@@ -25,8 +35,46 @@ export default function App() {
     cooling: 0,
     off: 0,
   });
+  const [activeTech, setActiveTech] = useState("heat pump");
   const [activeTab, setActiveTab] = useState("monthly");
   const [isLoading, setIsLoading] = useState(true);
+
+  const downloadCsv = () => {
+    const hourlyData = generateHourlyData({
+      summerTemp,
+      winterTemp,
+      insulationFactor: insulationOptions[insulationQuality].value,
+      householdSquareFootage: squareFootage,
+      winterSetpoint,
+      summerSetpoint,
+      heatingCapacity,
+      coolingCapacity,
+      heatingCOP,
+      coolingEER,
+    });
+
+    // Create CSV header
+    let csvContent =
+      "hour,day,month,hourOfDay,temperature,mode,heating,cooling,energyUsed\n";
+
+    // Add rows
+    hourlyData.forEach((row) => {
+      csvContent += `${row.hour},${row.day},${row.month},${row.hourOfDay},${row.temperature},${row.mode},${row.heating},${row.cooling},${row.energyUsed}\n`;
+    });
+
+    // Create download link
+    const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "heat_pump_hourly_data.csv");
+    document.body.appendChild(link);
+
+    // Trigger download
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+  };
 
   useEffect(() => {
     calculateData();
@@ -40,6 +88,7 @@ export default function App() {
     winterSetpoint,
     summerSetpoint,
     squareFootage,
+    insulationQuality,
   ]);
 
   const calculateData = () => {
@@ -98,7 +147,7 @@ export default function App() {
     const baseCoolingLoad = squareFootage * 20; // 20 BTU per sq ft for cooling
 
     // Adjust load factors based on insulation and climate (multipliers)
-    const insulationFactor = 0.8; // Assumes average insulation
+    const insulationFactor = insulationOptions[insulationQuality].value; // Insulation quality factor
     const climateFactor = winterTemp < 40 ? 1.2 : 1.0; // Additional factor for colder climates
 
     // Recalculate heat loss and heat gain with square footage
@@ -203,7 +252,14 @@ export default function App() {
   };
 
   return (
-    <div style={{ margin: "0 auto", padding: "20px" }}>
+    <div
+      style={{
+        margin: "0 auto",
+        padding: "20px",
+        backgroundColor: "#fff",
+        color: "#000",
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -211,11 +267,28 @@ export default function App() {
           alignItems: "center",
         }}
       >
-        <h1
-          style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}
-        >
-          Heat Pump Load Profile Generator
-        </h1>
+        <div>
+          <h1
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              marginBottom: "12px",
+            }}
+          >
+            Load Profile Generator
+          </h1>
+          <h2
+            style={{
+              fontSize: "16px",
+              fontWeight: "normal",
+              marginBottom: "20px",
+            }}
+          >
+            Visualize personalized energy usage based on your technologies, home
+            size and climate preferences. <br /> Generate annual load profiles,
+            analyze monthly patterns, and export results.
+          </h2>
+        </div>
 
         <div>
           <p style={{ margin: 0, fontSize: "0.75rem", fontWeight: 500 }}>
@@ -225,185 +298,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Parameter Controls */}
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "8px",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-          marginBottom: "20px",
-        }}
-      >
-        <h2
-          style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "15px" }}
-        >
-          Heat Pump Parameters
-        </h2>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-            gap: "20px",
-          }}
-        >
-          <div>
-            <label style={{ display: "block", marginBottom: "5px" }}>
-              Heating Capacity: {heatingCapacity.toLocaleString()} BTU/hr
-            </label>
-            <input
-              type="range"
-              min="6000"
-              max="36000"
-              step="1000"
-              value={heatingCapacity}
-              onChange={(e) => setHeatingCapacity(parseInt(e.target.value))}
-              style={{ width: "100%" }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px" }}>
-              Heating COP: {heatingCOP.toFixed(1)}
-            </label>
-            <input
-              type="range"
-              min="2"
-              max="5"
-              step="0.1"
-              value={heatingCOP}
-              onChange={(e) => setHeatingCOP(parseFloat(e.target.value))}
-              style={{ width: "100%" }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px" }}>
-              Cooling Capacity: {coolingCapacity.toLocaleString()} BTU/hr
-            </label>
-            <input
-              type="range"
-              min="6000"
-              max="36000"
-              step="1000"
-              value={coolingCapacity}
-              onChange={(e) => setCoolingCapacity(parseInt(e.target.value))}
-              style={{ width: "100%" }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px" }}>
-              Cooling EER: {coolingEER.toFixed(1)} BTU/Wh
-            </label>
-            <input
-              type="range"
-              min="8"
-              max="20"
-              step="0.5"
-              value={coolingEER}
-              onChange={(e) => setCoolingEER(parseFloat(e.target.value))}
-              style={{ width: "100%" }}
-            />
-          </div>
-        </div>
-
-        <h2
-          style={{
-            fontSize: "18px",
-            fontWeight: "bold",
-            marginBottom: "15px",
-            marginTop: "15px",
-          }}
-        >
-          User Parameters
-        </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-            gap: "20px",
-          }}
-        >
-          <div>
-            <label style={{ display: "block", marginBottom: "5px" }}>
-              Winter Temperature: {winterTemp}°F
-            </label>
-            <input
-              type="range"
-              min="0"
-              max="50"
-              step="1"
-              value={winterTemp}
-              onChange={(e) => setWinterTemp(parseInt(e.target.value))}
-              style={{ width: "100%" }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px" }}>
-              Summer Temperature: {summerTemp}°F
-            </label>
-            <input
-              type="range"
-              min="65"
-              max="95"
-              step="1"
-              value={summerTemp}
-              onChange={(e) => setSummerTemp(parseInt(e.target.value))}
-              style={{ width: "100%" }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px" }}>
-              Winter Thermostat Setpoint: {winterSetpoint}°F
-            </label>
-            <input
-              type="range"
-              min="50"
-              max="100"
-              step="1"
-              value={winterSetpoint}
-              onChange={(e) => setWinterSetpoint(parseInt(e.target.value))}
-              style={{ width: "100%" }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px" }}>
-              Summer Thermostat Setpoint: {summerSetpoint}°F
-            </label>
-            <input
-              type="range"
-              min="50"
-              max="100"
-              step="1"
-              value={summerSetpoint}
-              onChange={(e) => setSummerSetpoint(parseInt(e.target.value))}
-              style={{ width: "100%" }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px" }}>
-              Household Square Footage: {squareFootage.toLocaleString()} sq ft
-            </label>
-            <input
-              type="range"
-              min="200"
-              max="10000"
-              step="1"
-              value={squareFootage}
-              onChange={(e) => setSquareFootage(parseInt(e.target.value))}
-              style={{ width: "100%" }}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Tab Navigation */}
       <div
         style={{
           display: "flex",
@@ -412,83 +306,427 @@ export default function App() {
         }}
       >
         <button
-          onClick={() => setActiveTab("monthly")}
+          onClick={() => setActiveTech("heat pump")}
           style={{
             padding: "10px 15px",
             border: "none",
             background: "none",
             borderRadius: 0,
             borderBottom:
-              activeTab === "monthly" ? "2px solid #0ea5e9" : "none",
-            fontWeight: activeTab === "monthly" ? "bold" : "normal",
+              activeTech === "heat pump" ? "2px solid #0ea5e9" : "none",
+            fontWeight: activeTech === "heat pump" ? "bold" : "normal",
             cursor: "pointer",
           }}
         >
-          Monthly Data
+          Heat Pump
         </button>
 
         <button
-          onClick={() => setActiveTab("annual")}
+          onClick={() => setActiveTech("ev")}
           style={{
             padding: "10px 15px",
             border: "none",
             background: "none",
             borderRadius: 0,
-            borderBottom: activeTab === "annual" ? "2px solid #0ea5e9" : "none",
-            fontWeight: activeTab === "annual" ? "bold" : "normal",
+            borderBottom: activeTech === "ev" ? "2px solid #0ea5e9" : "none",
+            fontWeight: activeTech === "ev" ? "bold" : "normal",
             cursor: "pointer",
           }}
         >
-          Annual Summary
+          Electric Vehicle
         </button>
 
         <button
-          onClick={() => setActiveTab("methodology")}
+          onClick={() => setActiveTech("battery")}
           style={{
             padding: "10px 15px",
             border: "none",
             background: "none",
             borderRadius: 0,
             borderBottom:
-              activeTab === "methodology" ? "2px solid #0ea5e9" : "none",
-            fontWeight: activeTab === "methodology" ? "bold" : "normal",
+              activeTech === "battery" ? "2px solid #0ea5e9" : "none",
+            fontWeight: activeTech === "battery" ? "bold" : "normal",
             cursor: "pointer",
           }}
         >
-          Methodology
+          Home Battery
         </button>
       </div>
 
-      {isLoading ? (
-        <div
-          style={{ display: "flex", justifyContent: "center", padding: "50px" }}
-        >
-          <p>Calculating heat pump load profile...</p>
-        </div>
-      ) : (
+      {activeTech === "heat pump" && (
         <div>
-          {/* Monthly Data Tab */}
-          {activeTab === "monthly" && (
-            <MonthlyData monthlyData={monthlyData} totalEnergy={totalEnergy} />
-          )}
+          {/* Parameter Controls */}
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+              marginBottom: "20px",
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "18px",
+                fontWeight: "bold",
+                marginBottom: "15px",
+              }}
+            >
+              Global Service Area Parameters
+            </h2>
 
-          {/* Annual Summary Tab */}
-          {activeTab === "annual" && (
-            <AnnualSummary
-              totalEnergy={totalEnergy}
-              peakDemand={peakDemand}
-              operatingHours={operatingHours}
-              heatingCapacity={heatingCapacity}
-              coolingCapacity={coolingCapacity}
-              heatingCOP={heatingCOP}
-              coolingEER={coolingEER}
-              winterTemp={winterTemp}
-              summerTemp={summerTemp}
-            />
-          )}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                gap: "20px",
+              }}
+            >
+              <div>
+                <label style={{ display: "block", marginBottom: "5px" }}>
+                  Heating Capacity: {heatingCapacity.toLocaleString()} BTU/hr
+                </label>
+                <input
+                  type="range"
+                  min="6000"
+                  max="36000"
+                  step="1000"
+                  value={heatingCapacity}
+                  onChange={(e) => setHeatingCapacity(parseInt(e.target.value))}
+                  style={{ width: "100%" }}
+                />
+              </div>
 
-          {/* Methodology Tab */}
-          {activeTab === "methodology" && <Methodology />}
+              <div>
+                <label style={{ display: "block", marginBottom: "5px" }}>
+                  Heating COP: {heatingCOP.toFixed(1)}
+                </label>
+                <input
+                  type="range"
+                  min="2"
+                  max="5"
+                  step="0.1"
+                  value={heatingCOP}
+                  onChange={(e) => setHeatingCOP(parseFloat(e.target.value))}
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", marginBottom: "5px" }}>
+                  Cooling Capacity: {coolingCapacity.toLocaleString()} BTU/hr
+                </label>
+                <input
+                  type="range"
+                  min="6000"
+                  max="36000"
+                  step="1000"
+                  value={coolingCapacity}
+                  onChange={(e) => setCoolingCapacity(parseInt(e.target.value))}
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", marginBottom: "5px" }}>
+                  Cooling EER: {coolingEER.toFixed(1)} BTU/Wh
+                </label>
+                <input
+                  type="range"
+                  min="8"
+                  max="20"
+                  step="0.5"
+                  value={coolingEER}
+                  onChange={(e) => setCoolingEER(parseFloat(e.target.value))}
+                  style={{ width: "100%" }}
+                />
+              </div>
+            </div>
+
+            <h2
+              style={{
+                fontSize: "18px",
+                fontWeight: "bold",
+                marginBottom: "15px",
+                marginTop: "15px",
+              }}
+            >
+              UI Inputs
+            </h2>
+            <h3
+              style={{
+                fontSize: "16px",
+                fontWeight: "semibold",
+                color: "#444",
+                marginBottom: "8px",
+              }}
+            >
+              Winter
+            </h3>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                gap: "20px",
+              }}
+            >
+              <div>
+                <label style={{ display: "block", marginBottom: "5px" }}>
+                  Outdoor Temperature: {winterTemp}°F
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="50"
+                  step="1"
+                  value={winterTemp}
+                  onChange={(e) => setWinterTemp(parseInt(e.target.value))}
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", marginBottom: "5px" }}>
+                  Thermostat Setpoint: {winterSetpoint}°F
+                </label>
+                <input
+                  type="range"
+                  min="50"
+                  max="100"
+                  step="1"
+                  value={winterSetpoint}
+                  onChange={(e) => setWinterSetpoint(parseInt(e.target.value))}
+                  style={{ width: "100%" }}
+                />
+              </div>
+            </div>
+
+            <h3
+              style={{
+                fontSize: "16px",
+                fontWeight: "semibold",
+                color: "#444",
+                marginBottom: "8px",
+              }}
+            >
+              Summer
+            </h3>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                gap: "20px",
+              }}
+            >
+              <div>
+                <label style={{ display: "block", marginBottom: "5px" }}>
+                  Outdoor Temperature: {summerTemp}°F
+                </label>
+                <input
+                  type="range"
+                  min="65"
+                  max="95"
+                  step="1"
+                  value={summerTemp}
+                  onChange={(e) => setSummerTemp(parseInt(e.target.value))}
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", marginBottom: "5px" }}>
+                  Thermostat Setpoint: {summerSetpoint}°F
+                </label>
+                <input
+                  type="range"
+                  min="50"
+                  max="100"
+                  step="1"
+                  value={summerSetpoint}
+                  onChange={(e) => setSummerSetpoint(parseInt(e.target.value))}
+                  style={{ width: "100%" }}
+                />
+              </div>
+            </div>
+
+            <h3
+              style={{
+                fontSize: "16px",
+                fontWeight: "semibold",
+                color: "#444",
+                marginBottom: "8px",
+              }}
+            >
+              Household
+            </h3>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                gap: "20px",
+              }}
+            >
+              <div>
+                <label style={{ display: "block", marginBottom: "5px" }}>
+                  Square Footage: {squareFootage.toLocaleString()} sq ft
+                </label>
+                <input
+                  type="range"
+                  min="200"
+                  max="10000"
+                  step="1"
+                  value={squareFootage}
+                  onChange={(e) => setSquareFootage(parseInt(e.target.value))}
+                  style={{ width: "100%" }}
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", marginBottom: "5px" }}>
+                  Insulation Quality:{" "}
+                  {insulationOptions[insulationQuality].label}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="3"
+                  step="1"
+                  value={insulationQuality}
+                  onChange={(e) =>
+                    setInsulationQuality(parseInt(e.target.value))
+                  }
+                  style={{ width: "100%" }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <button
+              style={{
+                border: "1px solid #e5e7eb",
+                fontSize: "18px",
+                marginBottom: "20px",
+              }}
+              onClick={downloadCsv}
+              disabled={isLoading}
+            >
+              Download CSV
+            </button>
+
+            <h2 style={{ fontSize: "20px" }}>Graphical Summary</h2>
+          </div>
+
+          {/* Tab Navigation */}
+          <div
+            style={{
+              display: "flex",
+              borderBottom: "1px solid #e5e7eb",
+              marginBottom: "20px",
+            }}
+          >
+            <button
+              onClick={() => setActiveTab("monthly")}
+              style={{
+                padding: "10px 15px",
+                border: "none",
+                background: "none",
+                borderRadius: 0,
+                borderBottom:
+                  activeTab === "monthly" ? "2px solid #0ea5e9" : "none",
+                fontWeight: activeTab === "monthly" ? "bold" : "normal",
+                cursor: "pointer",
+              }}
+            >
+              Monthly Data
+            </button>
+
+            <button
+              onClick={() => setActiveTab("annual")}
+              style={{
+                padding: "10px 15px",
+                border: "none",
+                background: "none",
+                borderRadius: 0,
+                borderBottom:
+                  activeTab === "annual" ? "2px solid #0ea5e9" : "none",
+                fontWeight: activeTab === "annual" ? "bold" : "normal",
+                cursor: "pointer",
+              }}
+            >
+              Annual Summary
+            </button>
+
+            <button
+              onClick={() => setActiveTab("methodology")}
+              style={{
+                padding: "10px 15px",
+                border: "none",
+                background: "none",
+                borderRadius: 0,
+                borderBottom:
+                  activeTab === "methodology" ? "2px solid #0ea5e9" : "none",
+                fontWeight: activeTab === "methodology" ? "bold" : "normal",
+                cursor: "pointer",
+              }}
+            >
+              Methodology
+            </button>
+          </div>
+
+          {isLoading ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "50px",
+              }}
+            >
+              <p>Calculating heat pump load profile...</p>
+            </div>
+          ) : (
+            <div>
+              {/* Monthly Data Tab */}
+              {activeTab === "monthly" && (
+                <MonthlyData
+                  monthlyData={monthlyData}
+                  totalEnergy={totalEnergy}
+                />
+              )}
+
+              {/* Annual Summary Tab */}
+              {activeTab === "annual" && (
+                <AnnualSummary
+                  totalEnergy={totalEnergy}
+                  peakDemand={peakDemand}
+                  operatingHours={operatingHours}
+                  heatingCapacity={heatingCapacity}
+                  coolingCapacity={coolingCapacity}
+                  heatingCOP={heatingCOP}
+                  coolingEER={coolingEER}
+                  winterTemp={winterTemp}
+                  summerTemp={summerTemp}
+                />
+              )}
+
+              {/* Methodology Tab */}
+              {activeTab === "methodology" && <Methodology />}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTech !== "heat pump" && (
+        <div
+          style={{
+            textAlign: "center",
+            fontSize: "20px",
+            fontWeight: "bold",
+            fontStyle: "italic",
+            marginTop: "56px",
+          }}
+        >
+          This page is still a work in progress, check back later!
         </div>
       )}
     </div>

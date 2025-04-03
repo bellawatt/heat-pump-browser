@@ -137,7 +137,7 @@ export default function MonthlyData({ monthlyData, totalEnergy }) {
                       borderBottom: "1px solid #e2e8f0",
                     }}
                   >
-                    {month.heating}
+                    {month.heating.toLocaleString()}
                   </td>
                   <td
                     style={{
@@ -146,7 +146,7 @@ export default function MonthlyData({ monthlyData, totalEnergy }) {
                       borderBottom: "1px solid #e2e8f0",
                     }}
                   >
-                    {month.cooling}
+                    {month.cooling.toLocaleString()}
                   </td>
                   <td
                     style={{
@@ -155,7 +155,7 @@ export default function MonthlyData({ monthlyData, totalEnergy }) {
                       borderBottom: "1px solid #e2e8f0",
                     }}
                   >
-                    {month.total}
+                    {month.total.toLocaleString()}
                   </td>
                   <td
                     style={{
@@ -189,7 +189,7 @@ export default function MonthlyData({ monthlyData, totalEnergy }) {
                     borderBottom: "1px solid #e2e8f0",
                   }}
                 >
-                  {monthlyData.reduce((sum, month) => sum + month.heating, 0)}
+                  {monthlyData.reduce((sum, month) => sum + month.heating, 0).toLocaleString()}
                 </td>
                 <td
                   style={{
@@ -198,7 +198,7 @@ export default function MonthlyData({ monthlyData, totalEnergy }) {
                     borderBottom: "1px solid #e2e8f0",
                   }}
                 >
-                  {monthlyData.reduce((sum, month) => sum + month.cooling, 0)}
+                  {monthlyData.reduce((sum, month) => sum + month.cooling, 0).toLocaleString()}
                 </td>
                 <td
                   style={{
@@ -207,7 +207,7 @@ export default function MonthlyData({ monthlyData, totalEnergy }) {
                     borderBottom: "1px solid #e2e8f0",
                   }}
                 >
-                  {totalEnergy}
+                  {totalEnergy.toLocaleString()}
                 </td>
                 <td
                   style={{
