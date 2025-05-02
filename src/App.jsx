@@ -3,8 +3,8 @@ import Methodology from "./components/Methodology";
 import AnnualSummary from "./components/AnnualSummary";
 import MonthlyData from "./components/MonthlyData";
 import logo from "./assets/logo.svg";
-import { generateHourlyData } from "./functions";
-import './App.css'
+import { generateHourlyData, generateHourlyData2 } from "./functions";
+import "./App.css";
 
 const insulationOptions = [
   { label: "Very Bad", value: 1.3 },
@@ -14,6 +14,21 @@ const insulationOptions = [
 ];
 
 export default function App() {
+  const yearly = generateHourlyData2({
+    homeSizeInSqFt: 1200,
+    heatSetpoint: 68,
+    coolSetpoint: 76,
+    thermalMass: 10000,
+    lossCoeff: 0.6,
+    btus: 18000,
+    seer2: 20,
+  });
+
+  console.log(
+    "total: ",
+    yearly.reduce((sum, hour) => sum + hour, 0)
+  );
+
   // Parameters
   const [heatingCapacity, setHeatingCapacity] = useState(12000);
   const [coolingCapacity, setCoolingCapacity] = useState(12000);

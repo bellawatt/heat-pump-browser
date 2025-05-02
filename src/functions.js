@@ -1,3 +1,6 @@
+import { outdoorTemperatures } from "./data/temperatures";
+import { solarPower } from "./data/solarPower";
+
 export const generateHourlyData = (inputs) => {
   const {
     summerTemp,
@@ -178,4 +181,73 @@ export const generateHourlyData = (inputs) => {
   }
 
   return hourlyData;
+};
+
+const EFFECTIVE_WINDOW_AREA = 100; // in square feet
+const SOLAR_HEAT_GAIN_COEFFICIENT = 0.5;
+
+export const generateHourlyData2 = (inputs) => {
+  const {
+    homeSizeInSqFt,
+    heatSetpoint,
+    coolSetpoint,
+    thermalMass,
+    lossCoeff,
+    btus,
+    seer2,
+  } = inputs;
+
+  const copHeat = seer2 * 0.267;
+  const copCool = seer2 * 0.911;
+
+  let indoorTemp = heatSetpoint; // Initial indoor temperature
+  let result = [];
+
+  for (let i = 0; i < 8760; i++) {
+    const outdoorTemp = outdoorTemperatures[i];
+    const solarPowerGenerated = solarPower[i];
+    const solarGain =
+      solarPowerGenerated * EFFECTIVE_WINDOW_AREA * SOLAR_HEAT_GAIN_COEFFICIENT;
+
+    const hourOfDay = i % 24;
+    const peopleHeatGain = hourOfDay >= 7 && hourOfDay <= 20 ? 2000 : 500; // BTU/hr
+
+    const heatTransfer =
+      homeSizeInSqFt * lossCoeff * (outdoorTemp - indoorTemp) +
+      solarGain +
+      peopleHeatGain;
+
+    const isTempBetweenSetpoints =
+      indoorTemp <= coolSetpoint && indoorTemp >= heatSetpoint;
+
+    const energySupplied = isTempBetweenSetpoints
+      ? 0
+      : indoorTemp < heatSetpoint
+      ? Math.max(btus, heatTransfer)
+      : Math.min(-1 * btus, heatTransfer);
+
+    const heatPumpElecUse = Math.abs(
+      energySupplied > 0
+        ? energySupplied / (copHeat * 3412)
+        : energySupplied / (copCool * 3412)
+    ); // kWh
+
+    const netEnergyFlow = energySupplied + heatTransfer;
+    indoorTemp = indoorTemp + netEnergyFlow / thermalMass;
+    
+    // console.log('i: ', i);
+    // console.log('solarPowerGenerated: ', solarPowerGenerated);
+    // console.log('solarGain: ', solarGain);
+    // console.log('peopleHeatGain: ', peopleHeatGain);
+    // console.log('heat transfer: ', heatTransfer);
+    // console.log('energy supplied: ', energySupplied);
+    // console.log('heatPumpElecUse: ', heatPumpElecUse);
+    // console.log('netEnergyFlow: ', netEnergyFlow);
+    // console.log('indoorTempNext: ', indoorTemp);
+    
+
+    result.push(heatPumpElecUse);
+  }
+
+  return result;
 };
