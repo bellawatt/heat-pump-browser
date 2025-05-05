@@ -33,53 +33,57 @@ export default function Methodology() {
         {`Key Inputs
 - Home Characteristics:
   - Square Footage
+  - Building Loss Coefficient (insulation quality)
 - System Specifications: 
   - Heating and Cooling Capacities (BTU/hr)
-  - Heating COP and Cooling EER
+  - SEER2 Rating
 - Temperature Parameters:
-  - Winter and Summer Outdoor Temperatures
-  - Indoor Temperature Setpoints
+  - Heating and Cooling Setpoints
 
 Calculation Approach
 
 Home Energy Requirement Estimation
-- Base load calculations scaled by square footage
-  - Heating: 30 BTU per square foot
-  - Cooling: 20 BTU per square foot
-- Adjusts calculations using:
-  - Insulation factor
-  - Climate-specific modifiers
+- Hourly simulation across full year (8760 hours)
+- Dynamic indoor temperature modeling
+- Accounts for:
+  - Solar gain through windows
+  - Occupancy-based internal heat gains
+  - Building thermal mass
 
 Thermal Load Calculation
-1. Heating Load Determination
-   - Computes heating needs based on:
+1. Heat Transfer Determination
+   - Computes heat transfer based on:
      - Home square footage
-     - Temperature difference from balance point
-     - Insulation and climate factors
-     - Internal heat gains
+     - Temperature difference (indoor vs. outdoor)
+     - Building loss coefficient
+     - Solar gain
+     - Occupant heat contribution (varies by time of day)
 
-2. Cooling Load Determination
-   - Calculates cooling requirements using:
-     - Home square footage
-     - Temperature excess above setpoint
-     - Insulation and climate considerations
+2. System Operation Mode
+   - Determines operation mode:
+     - Heating: When indoor temperature falls below heating setpoint
+     - Cooling: When indoor temperature rises above cooling setpoint
+     - Off: When temperature is between setpoints
 
 Energy Consumption Analysis
-- Dynamically adjusts system capacity based on home characteristics
-- Converts thermal loads to electrical energy
-- Tracks monthly and annual energy use
-- Estimates operating hours for heating, cooling, and standby modes
+- Calculates COP values from SEER2 rating
+  - Heating COP = SEER2 × 0.293
+  - Cooling COP = 1.12 × SEER2 - 0.02 × SEER2²
+- Converts thermal energy to electrical consumption
+- Tracks hourly energy use and operating mode
+- Updates indoor temperature based on net energy flow and thermal mass
 
 Key Outputs
-- Monthly energy consumption
-- Total annual energy use
-- Peak energy demand
-- Seasonal operating hours
+- Hourly energy consumption
+- Mode of operation (heating, cooling, off)
+- Monthly energy aggregation
+- Indoor temperature progression
 
 Limitations
-- Based on average home characteristics
-- Simplified thermal and efficiency models
-- Does not account for unique home configurations or extreme weather variations
+- Uses predefined outdoor temperature and solar data
+- Simplified thermal model with single zone
+- Assumes constant building loss coefficient
+- Does not account for humidity or latent loads
                   `}
       </div>
     </div>
