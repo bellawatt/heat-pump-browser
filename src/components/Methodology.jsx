@@ -31,59 +31,34 @@ export default function Methodology() {
         }}
       >
         {`Key Inputs
-- Home Characteristics:
-  - Square Footage
-  - Building Loss Coefficient (insulation quality)
-- System Specifications: 
-  - Heating and Cooling Capacities (BTU/hr)
-  - SEER2 Rating
-- Temperature Parameters:
-  - Heating and Cooling Setpoints
+- Home parameters:
+  - Square footage
+  - Insulation quality
+- Temperature parameters: 
+  - Cooling setpoint
+  - Heating setpoint
+- Heatpump parameters:
+  - Heatpump capacity
+  - SEER2 rating
 
 Calculation Approach
-
-Home Energy Requirement Estimation
-- Hourly simulation across full year (8760 hours)
-- Dynamic indoor temperature modeling
-- Accounts for:
-  - Solar gain through windows
-  - Occupancy-based internal heat gains
-  - Building thermal mass
-
-Thermal Load Calculation
-1. Heat Transfer Determination
-   - Computes heat transfer based on:
-     - Home square footage
-     - Temperature difference (indoor vs. outdoor)
-     - Building loss coefficient
-     - Solar gain
-     - Occupant heat contribution (varies by time of day)
-
-2. System Operation Mode
-   - Determines operation mode:
-     - Heating: When indoor temperature falls below heating setpoint
-     - Cooling: When indoor temperature rises above cooling setpoint
-     - Off: When temperature is between setpoints
-
-Energy Consumption Analysis
-- Calculates COP values from SEER2 rating
-  - Heating COP = SEER2 × 0.293
-  - Cooling COP = 1.12 × SEER2 - 0.02 × SEER2²
-- Converts thermal energy to electrical consumption
-- Tracks hourly energy use and operating mode
-- Updates indoor temperature based on net energy flow and thermal mass
+- Hourly simulation across a full year (8760 hours)
+- The model estimates the hourly indoor temperature for every hour of the year, considering…
+  - User's home, temperature, and heatpump specific inputs,
+  - Real outdoor temperature and sunshine conditions for 2023,
+  - Approximated real-world behavior (home occupancy and background appliance use).
+- The heatpump runs when the indoor temperature falls below the heating setpoint, or above the cooling setpoint. If the temperature is between the setpoints, the heatpump is off until it is needed again.
 
 Key Outputs
-- Hourly energy consumption
-- Mode of operation (heating, cooling, off)
-- Monthly energy aggregation
+- Hourly Energy Consumption (8760 load profile), with an associated mode of operation (heat, cool, off),
+- Monthly energy aggregation,
 - Indoor temperature progression
 
-Limitations
-- Uses predefined outdoor temperature and solar data
-- Simplified thermal model with single zone
-- Assumes constant building loss coefficient
-- Does not account for humidity or latent loads
+Assumptions
+- NYC 2023 outdoor temp and sunshine data,
+- Static window size and window insulation efficiency (user input can be added if necessary),
+- No heatpump rightsizing checks; users can enter mismatched parameters (heatpump way too large or small for the room size and vis versa),
+- Estimates energy consumption for a single room; whole home or different layouts will have different heat pump usage.
                   `}
       </div>
     </div>
