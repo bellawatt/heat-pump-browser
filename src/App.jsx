@@ -3,7 +3,7 @@ import Methodology from "./components/Methodology";
 import AnnualSummary from "./components/AnnualSummary";
 import MonthlyData from "./components/MonthlyData";
 import logo from "./assets/logo.svg";
-import { generateHourlyData, generateHourlyData2 } from "./functions";
+import { generateHourlyData } from "./functions";
 import "./App.css";
 
 const insulationOptions = [
@@ -14,7 +14,7 @@ const insulationOptions = [
 ];
 
 export default function App() {
-  const yearly = generateHourlyData2({
+  const yearly = generateHourlyData({
     homeSizeInSqFt: 1200,
     heatSetpoint: 68,
     coolSetpoint: 76,
@@ -26,7 +26,7 @@ export default function App() {
 
   console.log(
     "total: ",
-    yearly.reduce((sum, hour) => sum + hour, 0)
+    yearly.reduce((sum, hour) => sum + hour.energy, 0)
   );
 
   // Parameters

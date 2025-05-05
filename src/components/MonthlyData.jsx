@@ -9,8 +9,59 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { HOURS_BY_OUTDOOR_TEMPERATURE } from "../data/temperatures";
 
-export default function MonthlyData({ monthlyData, totalEnergy }) {
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const monthsByAverageTemp = MONTHS.map((month, idx) => {
+  const entries = HOURS_BY_OUTDOOR_TEMPERATURE.filter(
+    ({ month }) => idx === month
+  );
+  return (
+    entries.reduce((sum, { temperature }) => sum + temperature, 0) /
+    entries.length
+  );
+});
+
+export default function MonthlyData({ annualData }) {
+  const monthlyData = MONTHS.map((month, idx) => {
+    const monthlyEntries = annualData.filter(({ month }) => idx === month);
+
+    const heating = monthlyEntries
+      .filter(({ mode }) => mode === "heating")
+      .reduce((sum, { energy }) => sum + energy, 0);
+
+    const cooling = monthlyEntries
+      .filter(({ mode }) => mode === "cooling")
+      .reduce((sum, { energy }) => sum + energy, 0);
+
+    return {
+      name: month,
+      heating: Math.round(heating),
+      cooling: Math.round(cooling),
+      total: Math.round(heating + cooling),
+      avgTemp: Math.round(monthsByAverageTemp[idx]),
+    };
+  });
+
+  const totalEnergy = monthlyData.reduce(
+    (sum, month) => sum + month.heating + month.cooling,
+    0
+  );
+
   return (
     <div>
       <div
@@ -189,7 +240,9 @@ export default function MonthlyData({ monthlyData, totalEnergy }) {
                     borderBottom: "1px solid #e2e8f0",
                   }}
                 >
-                  {monthlyData.reduce((sum, month) => sum + month.heating, 0).toLocaleString()}
+                  {monthlyData
+                    .reduce((sum, month) => sum + month.heating, 0)
+                    .toLocaleString()}
                 </td>
                 <td
                   style={{
@@ -198,7 +251,9 @@ export default function MonthlyData({ monthlyData, totalEnergy }) {
                     borderBottom: "1px solid #e2e8f0",
                   }}
                 >
-                  {monthlyData.reduce((sum, month) => sum + month.cooling, 0).toLocaleString()}
+                  {monthlyData
+                    .reduce((sum, month) => sum + month.cooling, 0)
+                    .toLocaleString()}
                 </td>
                 <td
                   style={{
