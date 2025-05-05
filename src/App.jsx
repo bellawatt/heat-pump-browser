@@ -38,8 +38,7 @@ export default function App2() {
       seer2: heatPumpSeer2,
     });
 
-    let csvContent =
-      "date,energy_used,mode\n";
+    let csvContent = "date,energy_used,mode\n";
 
     // Add rows
     hourlyData.forEach((row) => {
@@ -60,8 +59,6 @@ export default function App2() {
     document.body.removeChild(link);
   };
 
-  console.log("annualData", annualData);
-  
   const calculateData = () => {
     setIsLoading(true);
 
