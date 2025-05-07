@@ -121,6 +121,7 @@ export default function App2() {
             setActiveTab={setActiveTab}
             isLoading={isLoading}
             annualData={annualData}
+            handleDownload={downloadCsv}
           />
         )}
       </div>

@@ -4,7 +4,7 @@ import { BatteryIcon, HomeIcon, PhoneIcon, TruckIcon } from "../assets/vectors";
 
 export default function SideNav() {
   return (
-    <div className="w-[325px] flex flex-col bg-linear-[89.3deg,#2605F1_0.54%,#7620D9_99.34%] pt-12 pb-8 px-4">
+    <div className="w-[325px] flex shrink-0 flex-col bg-linear-[89.3deg,#2605F1_0.54%,#7620D9_99.34%] pt-12 pb-8 px-4">
       <p className="font-grotesk font-semibold text-white text-3xl mb-6">
         Load Profile Generator
       </p>

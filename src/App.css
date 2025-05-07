@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
 @font-face {
   font-family: "PP Mori";
   src: url("/fonts/PPMori-Regular.woff2") format("woff2");
