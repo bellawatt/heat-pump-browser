@@ -1,5 +1,56 @@
 @import "tailwindcss";
-button {
-  color: #000;
-  background-color: #fff;
+
+@custom-variant dark (&:where(.dark, .dark *));
+@font-face {
+  font-family: "PP Mori";
+  src: url("/fonts/PPMori-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PP Mori";
+  src: url("/fonts/PPMori-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sharp Grotesk";
+  src: url("/fonts/SharpGrotesk-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sharp Grotesk";
+  src: url("/fonts/SharpGrotesk-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sharp Grotesk";
+  src: url("/fonts/SharpGrotesk-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Sharp Grotesk";
+  src: url("/fonts/SharpGrotesk-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@theme {
+  --font-ppMori: "PP Mori", sans-serif;
+  --font-grotesk: "Sharp Grotesk", sans-serif;
+
+  --color-indigo-100: #F4EBFF;
+  --color-indigo-200: #E9E6FE;
+  --color-indigo-500: #2605F1;
+  --color-indigo-600: #7630D9;
+  --color-indigo-900: #100265;
+  --dark-color-black: #000000;
 }
