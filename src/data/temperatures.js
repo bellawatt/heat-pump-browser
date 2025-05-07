@@ -1,5 +1,3 @@
-import {getDateFromHourOfYear} from '../functions';
-
 export const outdoorTemperatures = [
   47.6, 51.5, 51.5, 51.6, 51.1, 50.7, 50.6, 50.4, 49.2, 48.1, 47.2, 45.8, 43.7,
   46.0, 48.8, 50.7, 51.3, 52.3, 52.9, 53.1, 52.7, 50.0, 44.2, 41.3, 40.5, 42.7,
@@ -676,10 +674,3 @@ export const outdoorTemperatures = [
   42.2, 39.0, 36.8, 35.7, 33.8, 33.4, 32.7, 30.8, 29.7, 28.5, 28.0, 28.0, 34.7,
   38.0, 41.0, 42.5, 43.0, 43.3, 43.3, 43.1, 42.2, 39.7, 38.0,
 ];
-
-export const HOURS_BY_OUTDOOR_TEMPERATURE = outdoorTemperatures.map((temp, idx) => {
-  return {
-    month: getDateFromHourOfYear(idx).getMonth(),
-    temperature: temp,
-  };
-});

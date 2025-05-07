@@ -21,9 +21,16 @@ const EFFECTIVE_WINDOW_AREA = 100; // in square feet
 const SOLAR_HEAT_GAIN_COEFFICIENT = 0.7;
 const THERMAL_MASS = 10000; // in BTU/°F
 
-export function getDateFromHourOfYear(hour) {
-  const baseDate = new Date(2021, 0, 1, 0, 0, 0);
+function getDateFromHourOfYear(hour) {
+  const baseDate = new Date(2023, 0, 1, 0, 0, 0);
   return addHours(baseDate, hour);
+}
+
+export function getHoursByOutdoorTemperature() {
+  return outdoorTemperatures.map((temp, idx) => ({
+    month: getDateFromHourOfYear(idx).getMonth(),
+    temperature: temp,
+  }));
 }
 
 export const generateHourlyData = (inputs) => {

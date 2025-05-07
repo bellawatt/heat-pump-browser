@@ -9,7 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { HOURS_BY_OUTDOOR_TEMPERATURE } from "../data/temperatures";
+import { getHoursByOutdoorTemperature } from "../functions";
 
 const MONTHS = [
   "January",
@@ -26,8 +26,8 @@ const MONTHS = [
   "December",
 ];
 
-const monthsByAverageTemp = MONTHS.map((month, idx) => {
-  const entries = HOURS_BY_OUTDOOR_TEMPERATURE.filter(
+const monthsByAverageTemp = MONTHS.map((_, idx) => {
+  const entries = getHoursByOutdoorTemperature().filter(
     ({ month }) => idx === month
   );
   return (
