@@ -115,8 +115,8 @@ export const Ring = () => (
         y2="107.89"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#2605F1" />
-        <stop offset="1" stop-color="#7630D9" />
+        <stop stopColor="#2605F1" />
+        <stop offset="1" stopColor="#7630D9" />
       </linearGradient>
     </defs>
   </svg>

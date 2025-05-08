@@ -6,7 +6,7 @@ export default function Slider({ ...props }) {
         {...props}
         className={`
         w-full h-2 rounded-lg cursor-pointer appearance-none
-        bg-indigo-600
+        bg-indigo-400
         [&::-webkit-slider-thumb]:appearance-none
         [&::-webkit-slider-thumb]:w-4
         [&::-webkit-slider-thumb]:h-4

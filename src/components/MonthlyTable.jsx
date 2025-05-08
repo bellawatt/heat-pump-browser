@@ -2,70 +2,24 @@ import React from "react";
 
 export default function MonthlyTable({ monthlyData, totals }) {
   return (
-    <div
-      style={{
-        backgroundColor: "white",
-        padding: "20px",
-        borderRadius: "8px",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "18px",
-          fontWeight: "bold",
-          marginBottom: "15px",
-        }}
-      >
-        Monthly Data Table
-      </h2>
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+    <div className="bg-white rounded-lg">
+      <div className="overflow-x-auto rounded-lg">
+        <table className="w-full border-collapse">
           <thead>
-            <tr style={{ backgroundColor: "#f8fafc" }}>
-              <th
-                style={{
-                  padding: "12px",
-                  textAlign: "left",
-                  borderBottom: "1px solid #e2e8f0",
-                }}
-              >
+            <tr className="bg-gray-50">
+              <th className="text-left text-sm font-semibold text-gray-700 p-3 border-b border-gray-200 pl-6">
                 Month
               </th>
-              <th
-                style={{
-                  padding: "12px",
-                  textAlign: "right",
-                  borderBottom: "1px solid #e2e8f0",
-                }}
-              >
+              <th className="text-center text-sm font-semibold text-gray-700 p-3 border-b border-gray-200">
                 Heating (kWh)
               </th>
-              <th
-                style={{
-                  padding: "12px",
-                  textAlign: "right",
-                  borderBottom: "1px solid #e2e8f0",
-                }}
-              >
+              <th className="text-center text-sm font-semibold text-gray-700 p-3 border-b border-gray-200">
                 Cooling (kWh)
               </th>
-              <th
-                style={{
-                  padding: "12px",
-                  textAlign: "right",
-                  borderBottom: "1px solid #e2e8f0",
-                }}
-              >
+              <th className="text-center text-sm font-semibold text-gray-700 p-3 border-b border-gray-200">
                 Total (kWh)
               </th>
-              <th
-                style={{
-                  padding: "12px",
-                  textAlign: "right",
-                  borderBottom: "1px solid #e2e8f0",
-                }}
-              >
+              <th className="text-center text-sm font-semibold text-gray-700 p-3 border-b border-gray-200">
                 Avg Temp (°F)
               </th>
             </tr>
@@ -74,104 +28,39 @@ export default function MonthlyTable({ monthlyData, totals }) {
             {monthlyData.map((month, index) => (
               <tr
                 key={index}
-                style={{
-                  backgroundColor: index % 2 === 0 ? "white" : "#f8fafc",
-                }}
+                className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
               >
-                <td
-                  style={{
-                    padding: "12px",
-                    borderBottom: "1px solid #e2e8f0",
-                  }}
-                >
+                <td className="text-left text-sm font-medium text-gray-700 p-3 border-b border-gray-200 pl-6">
                   {month.name}
                 </td>
-                <td
-                  style={{
-                    padding: "12px",
-                    textAlign: "right",
-                    borderBottom: "1px solid #e2e8f0",
-                  }}
-                >
+                <td className="text-center text-sm font-medium text-gray-700 p-3 border-b border-gray-200">
                   {month.heating.toLocaleString()}
                 </td>
-                <td
-                  style={{
-                    padding: "12px",
-                    textAlign: "right",
-                    borderBottom: "1px solid #e2e8f0",
-                  }}
-                >
+                <td className="text-center text-sm font-medium text-gray-700 p-3 border-b border-gray-200">
                   {month.cooling.toLocaleString()}
                 </td>
-                <td
-                  style={{
-                    padding: "12px",
-                    textAlign: "right",
-                    borderBottom: "1px solid #e2e8f0",
-                  }}
-                >
+                <td className="text-center text-sm font-medium text-gray-700 p-3 border-b border-gray-200">
                   {month.total.toLocaleString()}
                 </td>
-                <td
-                  style={{
-                    padding: "12px",
-                    textAlign: "right",
-                    borderBottom: "1px solid #e2e8f0",
-                  }}
-                >
+                <td className="text-center text-sm font-medium text-gray-700 p-3 border-b border-gray-200">
                   {month.avgTemp}
                 </td>
               </tr>
             ))}
-            <tr
-              style={{
-                backgroundColor: "#f1f5f9",
-                fontWeight: "bold",
-              }}
-            >
-              <td
-                style={{
-                  padding: "12px",
-                  borderBottom: "1px solid #e2e8f0",
-                }}
-              >
-                TOTAL
+            <tr className="bg-gray-100">
+              <td className="text-left text-sm font-bold text-gray-700 p-3 border-b border-gray-200 pl-6">
+                Total
               </td>
-              <td
-                style={{
-                  padding: "12px",
-                  textAlign: "right",
-                  borderBottom: "1px solid #e2e8f0",
-                }}
-              >
+              <td className="text-center text-sm font-bold text-gray-700 p-3 border-b border-gray-200">
                 {totals.heating.toLocaleString()}
               </td>
-              <td
-                style={{
-                  padding: "12px",
-                  textAlign: "right",
-                  borderBottom: "1px solid #e2e8f0",
-                }}
-              >
+              <td className="text-center text-sm font-bold text-gray-700 p-3 border-b border-gray-200">
                 {totals.cooling.toLocaleString()}
               </td>
-              <td
-                style={{
-                  padding: "12px",
-                  textAlign: "right",
-                  borderBottom: "1px solid #e2e8f0",
-                }}
-              >
+              <td className="text-center text-sm font-bold text-gray-700 p-3 border-b border-gray-200">
                 {totals.total.toLocaleString()}
               </td>
-              <td
-                style={{
-                  padding: "12px",
-                  textAlign: "right",
-                  borderBottom: "1px solid #e2e8f0",
-                }}
-              >
+              <td className="text-center text-sm font-bold text-gray-700 p-3 border-b border-gray-200">
                 -
               </td>
             </tr>

@@ -7,18 +7,18 @@ import MonthlyTable from "./MonthlyTable";
 import { LightningIcon, Ring } from "../assets/vectors";
 
 const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
   "May",
   "June",
   "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 const monthsByAverageTemp = MONTHS.map((_, idx) => {
@@ -73,7 +73,7 @@ export default function Results({
   );
 
   return (
-    <div className="grid grid-cols-3 gap-6">
+    <div className="grid grid-cols-3 gap-6 mb-10">
       <div className="col-span-2 bg-white mt-10 py-4 px-6 rounded-xl border border-gray-300">
         <p className="font-semibold text-lg mb-1">Graphical Summary</p>
         <p className="text-sm text-gray-600 mb-5">
@@ -81,57 +81,36 @@ export default function Results({
         </p>
 
         {/* Tab Navigation */}
-        <div
-          style={{
-            display: "flex",
-            borderBottom: "1px solid #e5e7eb",
-            marginBottom: "20px",
-          }}
-        >
+        <div className="flex border border-gray-200 bg-gray-50 rounded-lg p-1 mb-5">
           <button
             onClick={() => setActiveTab("monthly")}
-            style={{
-              padding: "10px 15px",
-              border: "none",
-              background: "none",
-              borderRadius: 0,
-              borderBottom:
-                activeTab === "monthly" ? "2px solid #0ea5e9" : "none",
-              fontWeight: activeTab === "monthly" ? "bold" : "normal",
-              cursor: "pointer",
-            }}
+            className={`${
+              activeTab === "monthly"
+                ? "shadow-[0_1px_3px_0_#1018281A]! bg-white! text-gray-800!"
+                : "bg-transparent! text-gray-500!"
+            }  border-none! outline-none! text-sm! font-semibold!`}
           >
             Monthly Data
           </button>
 
           <button
             onClick={() => setActiveTab("annual")}
-            style={{
-              padding: "10px 15px",
-              border: "none",
-              background: "none",
-              borderRadius: 0,
-              borderBottom:
-                activeTab === "annual" ? "2px solid #0ea5e9" : "none",
-              fontWeight: activeTab === "annual" ? "bold" : "normal",
-              cursor: "pointer",
-            }}
+            className={`${
+              activeTab === "annual"
+                ? "shadow-[0_1px_3px_0_#1018281A]! bg-white! text-gray-800!"
+                : "bg-transparent! text-gray-500!"
+            }  border-none! outline-none! text-sm! font-semibold!`}
           >
             Annual Summary
           </button>
 
           <button
             onClick={() => setActiveTab("methodology")}
-            style={{
-              padding: "10px 15px",
-              border: "none",
-              background: "none",
-              borderRadius: 0,
-              borderBottom:
-                activeTab === "methodology" ? "2px solid #0ea5e9" : "none",
-              fontWeight: activeTab === "methodology" ? "bold" : "normal",
-              cursor: "pointer",
-            }}
+            className={`${
+              activeTab === "methodology"
+                ? "shadow-[0_1px_3px_0_#1018281A]! bg-white! text-gray-800!"
+                : "bg-transparent! text-gray-500!"
+            }  border-none! outline-none! text-sm! font-semibold!`}
           >
             Methodology
           </button>
@@ -173,7 +152,7 @@ export default function Results({
 
         <div className="flex-grow flex flex-col items-center justify-center relative">
           <Ring />
-          <p className="absolute font-ppMori font-semibold text-3xl top-[calc(50%-24px)]">
+          <p className="absolute font-ppMori font-semibold text-[28px] top-[calc(50%-24px)]">
             {totals.total.toLocaleString()} kWh
           </p>
           <p className="mt-6 font-semibold text-gray-800">
@@ -197,9 +176,11 @@ export default function Results({
         </div>
       </div>
 
-      <div className="col-span-3">
-        <MonthlyTable monthlyData={monthlyData} totals={totals} />
-      </div>
+      {activeTab === "monthly" && (
+        <div className="col-span-3">
+          <MonthlyTable monthlyData={monthlyData} totals={totals} />
+        </div>
+      )}
     </div>
   );
 }

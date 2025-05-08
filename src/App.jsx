@@ -12,7 +12,7 @@ const insulationOptions = [
   { label: "Excellent", value: 0.1 },
 ];
 
-export default function App2() {
+export default function App() {
   const [heatPumpBtu, setHeatPumpBtu] = useState(18000);
   const [heatPumpSeer2, setHeatPumpSeer2] = useState(22);
   const [squareFootage, setSquareFootage] = useState(750);
@@ -71,7 +71,6 @@ export default function App2() {
 
     setAnnualData(data);
     setIsLoading(false);
-    
   };
 
   return (
