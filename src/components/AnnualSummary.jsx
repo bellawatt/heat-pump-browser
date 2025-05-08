@@ -1,11 +1,6 @@
 import React from "react";
 
-export default function AnnualSummary({
-  annualData,
-  // totalEnergy,
-  // peakDemand,
-  // operatingHours,
-}) {
+export default function AnnualSummary({ annualData }) {
   const totalEnergy = annualData.reduce((sum, hour) => sum + hour.energy, 0);
   const peakDemand = Math.max(...annualData.map((hour) => hour.energy));
   const operatingHours = {
@@ -15,173 +10,94 @@ export default function AnnualSummary({
   };
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-        gap: "20px",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "8px",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: "18px",
-            fontWeight: "bold",
-            marginBottom: "15px",
-          }}
-        >
+    <div className="grid grid-cols-2 gap-6">
+      <div className="col-span-2 lg:col-span-1">
+        <p className="font-ppMori font-semibold mb-6">
           Annual Energy Statistics
-        </h2>
+        </p>
 
-        <div
-          style={{
-            marginBottom: "15px",
-            padding: "15px",
-            backgroundColor: "#f8fafc",
-            borderRadius: "8px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "32px",
-              fontWeight: "bold",
-              color: "#3b82f6",
-              marginRight: "15px",
-            }}
-          >
-            {Math.round(totalEnergy).toLocaleString()}
+        <div className="rounded-xl py-2 px-6 border border-gray-200 flex flex-col justify-center mb-6">
+          <p className="font-medium text-sm text-gray-600 mb-2">
+            Total Annual Energy
+          </p>
+          <div className="flex justify-between items-center">
+            <p className="text-3xl font-semibold">
+              {Math.round(totalEnergy).toLocaleString()}
+            </p>
+            <div className="rounded-2xl bg-green-100 px-2 py-0.5">
+              <p className="text-green-700 font-medium text-sm">kWh</p>
+            </div>
           </div>
-          <div>
-            <div style={{ fontWeight: "500" }}>Total Annual Energy</div>
-            <div style={{ color: "#64748b" }}>kilowatt-hours (kWh)</div>
+        </div>
+        <div className="rounded-xl py-2 px-6 border border-gray-200 flex flex-col justify-center mb-6">
+          <p className="font-medium text-sm text-gray-600 mb-2">Peak Demand</p>
+          <div className="flex justify-between items-center">
+            <p className="text-3xl font-semibold">
+              {Math.round(peakDemand * 1000).toLocaleString()}
+            </p>
+            <div className="rounded-2xl bg-green-100 px-2 py-0.5">
+              <p className="text-green-700 font-medium text-sm">W</p>
+            </div>
           </div>
         </div>
 
-        <div
-          style={{
-            marginBottom: "15px",
-            padding: "15px",
-            backgroundColor: "#f8fafc",
-            borderRadius: "8px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "32px",
-              fontWeight: "bold",
-              color: "#ef4444",
-              marginRight: "15px",
-            }}
-          >
-            {Math.round(peakDemand * 1000).toLocaleString()}
-          </div>
-          <div>
-            <div style={{ fontWeight: "500" }}>Peak Demand</div>
-            <div style={{ color: "#64748b" }}>watts (W)</div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            padding: "15px",
-            backgroundColor: "#f8fafc",
-            borderRadius: "8px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "32px",
-              fontWeight: "bold",
-              color: "#0f172a",
-              marginRight: "15px",
-            }}
-          >
-            {Math.round(totalEnergy / 12).toLocaleString()}
-          </div>
-          <div>
-            <div style={{ fontWeight: "500" }}>Average Monthly Energy</div>
-            <div style={{ color: "#64748b" }}>kilowatt-hours (kWh)</div>
+        <div className="rounded-xl py-2 px-6 border border-gray-200 flex flex-col justify-center mb-6">
+          <p className="font-medium text-sm text-gray-600 mb-2">
+            Average Monthly Energy
+          </p>
+          <div className="flex justify-between items-center">
+            <p className="text-3xl font-semibold">
+              {Math.round(totalEnergy / 12).toLocaleString()}
+            </p>
+            <div className="rounded-2xl bg-green-100 px-2 py-0.5">
+              <p className="text-green-700 font-medium text-sm">kWh</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "8px",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: "18px",
-            fontWeight: "bold",
-            marginBottom: "15px",
-          }}
-        >
-          Operating Hours
-        </h2>
+      <div className="col-span-2 lg:col-span-1">
+        <p className="font-ppMori font-semibold mb-6">Operating Hours</p>
 
-        <div
-          style={{
-            marginBottom: "15px",
-            padding: "15px",
-            backgroundColor: "#fee2e2",
-            borderRadius: "8px",
-          }}
-        >
-          <div style={{ fontWeight: "500", marginBottom: "5px" }}>
-            Heating Mode
-          </div>
-          <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            {operatingHours.heating.toLocaleString()} hours (
-            {Math.round(operatingHours.heating / 87.6)}%)
+        <div className="rounded-xl py-2 px-6 border border-gray-200 flex flex-col justify-center mb-6 bg-red-400">
+          <p className="font-medium text-sm text-gray-900 mb-2">Heating Mode</p>
+          <div className="flex justify-between items-center">
+            <p className="text-3xl font-semibold">
+              {operatingHours.heating.toLocaleString()} hours
+            </p>
+            <div className="rounded-2xl bg-red-500 px-2 py-0.5">
+              <p className="text-gray-900 font-medium text-sm">
+                {Math.round(operatingHours.heating / 87.6)}%
+              </p>
+            </div>
           </div>
         </div>
 
-        <div
-          style={{
-            marginBottom: "15px",
-            padding: "15px",
-            backgroundColor: "#dbeafe",
-            borderRadius: "8px",
-          }}
-        >
-          <div style={{ fontWeight: "500", marginBottom: "5px" }}>
-            Cooling Mode
-          </div>
-          <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            {operatingHours.cooling.toLocaleString()} hours (
-            {Math.round(operatingHours.cooling / 87.6)}%)
+        <div className="rounded-xl py-2 px-6 border border-gray-200 flex flex-col justify-center mb-6 bg-indigo-100">
+          <p className="font-medium text-sm text-gray-900 mb-2">Cooling Mode</p>
+          <div className="flex justify-between items-center">
+            <p className="text-3xl font-semibold">
+              {operatingHours.cooling.toLocaleString()} hours
+            </p>
+            <div className="rounded-2xl bg-indigo-300 px-2 py-0.5">
+              <p className="text-indigo-900 font-medium text-sm">
+                {Math.round(operatingHours.cooling / 87.6)}%
+              </p>
+            </div>
           </div>
         </div>
 
-        <div
-          style={{
-            padding: "15px",
-            backgroundColor: "#f1f5f9",
-            borderRadius: "8px",
-          }}
-        >
-          <div style={{ fontWeight: "500", marginBottom: "5px" }}>Off Mode</div>
-          <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            {operatingHours.off.toLocaleString()} hours (
-            {Math.round(operatingHours.off / 87.6)}
-            %)
+        <div className="rounded-xl py-2 px-6 border border-gray-200 flex flex-col justify-center mb-6">
+          <p className="font-medium text-sm text-gray-600 mb-2">Off</p>
+          <div className="flex justify-between items-center">
+            <p className="text-3xl font-semibold">
+              {operatingHours.off.toLocaleString()} hours
+            </p>
+            <div className="rounded-2xl bg-green-100 px-2 py-0.5">
+              <p className="text-green-700 font-medium text-sm">
+                {Math.round(operatingHours.off / 87.6)}%
+              </p>
+            </div>
           </div>
         </div>
       </div>

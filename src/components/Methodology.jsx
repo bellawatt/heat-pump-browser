@@ -2,34 +2,9 @@ import React from "react";
 
 export default function Methodology() {
   return (
-    <div
-      style={{
-        backgroundColor: "white",
-        padding: "20px",
-        borderRadius: "8px",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "18px",
-          fontWeight: "bold",
-          marginBottom: "15px",
-        }}
-      >
-        Methodology
-      </h2>
-      <div
-        style={{
-          backgroundColor: "#f8fafc",
-          padding: "20px",
-          borderRadius: "8px",
-          whiteSpace: "pre-wrap",
-          fontFamily: "monospace",
-          overflow: "auto",
-          maxHeight: "600px",
-        }}
-      >
+    <div>
+      <p className="font-semibold text-lg mb-4">Methodology</p>
+      <div className="bg-[#150385] p-6 rounded-xl text-[#93F203] font-mono font-medium overflow-auto max-h-[600px] whitespace-pre-wrap">
         {`Key Inputs
 - Home parameters:
   - Square footage
@@ -64,4 +39,3 @@ Assumptions
     </div>
   );
 }
-

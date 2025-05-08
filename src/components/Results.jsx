@@ -74,7 +74,7 @@ export default function Results({
 
   return (
     <div className="grid grid-cols-3 gap-6 mb-10">
-      <div className="col-span-2 bg-white mt-10 py-4 px-6 rounded-xl border border-gray-300">
+      <div className="col-span-2 bg-white py-4 px-6 rounded-xl border border-gray-300">
         <p className="font-semibold text-lg mb-1">Graphical Summary</p>
         <p className="text-sm text-gray-600 mb-5">
           Track energy consumption at a glance.
@@ -144,7 +144,7 @@ export default function Results({
         )}
       </div>
 
-      <div className="flex flex-col col-span-1 bg-white mt-10 py-4 rounded-xl border border-gray-300">
+      <div className="flex flex-col col-span-1 bg-white py-4 rounded-xl border border-gray-300 max-h-[550px]">
         <div className="shrink-0 px-6 border-b border-gray-200">
           <p className="font-semibold text-lg mb-1">Total (kWh)</p>
           <p className="text-sm text-gray-600 mb-5">Annual usage amount</p>

@@ -94,7 +94,7 @@ export default function App() {
           insulationOptions={insulationOptions}
         />
 
-        <div className="mt-6 flex w-full justify-center mb-4">
+        <div className="my-6 flex w-full justify-center">
           <button
             className="bg-indigo-500! text-white! font-ppMori! font-semibold! text-lg! p-0! py-4! px-6! rounded-[75px]! border-none!"
             onClick={calculateData}
